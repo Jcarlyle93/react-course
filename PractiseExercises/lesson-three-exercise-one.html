@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+
+      function Counter({counter, onIncrament}) {
+
+        return(
+          <>
+            {counter === 1 ?  
+              <button onClick={onIncrament}>Clicked {counter} time</button> : <button onClick={onIncrament}>Clicked {counter} times</button>
+            }
+          </>
+        )
+      }
+      
+      function App() {
+
+        const [counts, setCounts] = React.useState([0,0])
+
+        function resetCounter() {
+          setCounts([0,0])
+        }
+
+         function updateCount(index) {
+          //console.log("clicked")
+          const newCounts = [...counts]
+          newCounts[index] = newCounts[index] + 1
+          setCounts(newCounts)
+        }
+    
+        return(
+          <>
+            {counts.map((count, index)=> (
+              <Counter counter={count} key={index} onIncrament={()=> updateCount(index)}/>
+            ))}
+            <button onClick={resetCounter}>Reset</button>
+          </>
+        )
+      }
+
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>
