@@ -75,6 +75,12 @@
         width: 45px;
         height: 45px;
       }
+
+      .chat-messages-container {
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
     </style>
   </head>
   <body>
@@ -175,8 +181,16 @@
 
       function ChatMessages({chatMessages}) {
 
+        const chatMessagesRef = React.useRef(null);
+
+        React.useEffect(() => {
+          //Elem contains html Element
+          const containerElem = chatMessagesRef.current
+          if (containerElem) containerElem.scrollTop = containerElem.scrollHeight
+        }, [chatMessages]); // Dependancy Array
+
         return (
-          <div class="chat-messages-container js-chat-message-container">
+          <div className="chat-messages-container js-chat-message-container" ref={chatMessagesRef}>
             {chatMessages.map((chatMessage) => {
               return (
                 <ChatMessage message={chatMessage.message} sender={chatMessage.sender} key={chatMessage.id}/>
