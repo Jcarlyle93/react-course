@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>React Basics</title>
+
+    <style>
+      .flexContainer{
+        display: flex;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+      }
+      .btn{
+        background-color: rgb(25, 135, 84);
+        margin: 5px;
+        padding: 10px;
+        border: none;
+        border-radius: 3px;
+        color: white;
+        font-size: medium;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+
+      function Counter({counter, onIncrament}) {
+
+        return(
+          <>
+            {counter === 1 ?  
+              <button className="btn" onClick={onIncrament}>Clicked {counter} time</button> : <button className="btn" onClick={onIncrament}>Clicked {counter} times</button>
+            }
+          </>
+        )
+      }
+      
+      function App() {
+
+        const [counts, setCounts] = React.useState([0, 0])
+        const [autoClicker, setAutoClicker] = React.useState(false)
+
+        const autoClickRef = React.useRef(null)
+
+        function resetCounter() {
+          setCounts([0,0])
+        }
+
+        function updateCount(index) {
+          //console.log("clicked")
+          const newCounts = [...counts]
+          newCounts[index] = newCounts[index] + 1
+          setCounts(newCounts)
+        }
+
+        function autoClick() {
+          if(!autoClicker){
+            autoClickRef.current = setInterval(()=>{
+              setCounts((prevCounts) => {
+                return prevCounts.map((count) => count + 1)
+              })
+            },1000)
+          } else {
+            clearInterval(autoClickRef.current)
+          }
+          setAutoClicker(!autoClicker)
+        }
+    
+        return(
+          <div className="flexContainer">
+            {counts.map((count, index)=> (
+              <Counter counter={count} key={index} onIncrament={()=> updateCount(index)}/>
+            ))}
+            <button className="btn" onClick={resetCounter}>Reset</button>
+            <button className="btn" onClick={autoClick}>{!autoClicker ? "Auto Click" : "Stop Auto Click"}</button>
+          </div>
+        )
+      }
+
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>

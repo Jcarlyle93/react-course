@@ -116,6 +116,7 @@
             }
           ]
 
+          setChatMessages(newChatMessages)
           setInputText('')
           setIsLoading(true)
 
@@ -179,7 +180,7 @@
         );
       }
 
-      function ChatMessages({chatMessages}) {
+      function ChatMessages({chatMessages, isLoading}) {
 
         const chatMessagesRef = React.useRef(null);
 
@@ -196,6 +197,16 @@
                 <ChatMessage message={chatMessage.message} sender={chatMessage.sender} key={chatMessage.id}/>
               )
             })}
+            {isLoading && <ReplyLoading isLoading={isLoading}/>}
+          </div>
+        )
+      }
+
+      function ReplyLoading() {
+        return (
+          <div className="chat-message-container-robot">
+            <img src="robot.png" height="40"/>
+            <p className="chat-message-contents"><img src="loading-spinner.gif" height="40px"/></p>
           </div>
         )
       }
@@ -209,23 +220,7 @@
 
         const[isLoading, setIsLoading] = React.useState(false)
 
-        const [chatMessages, setChatMessages] = React.useState([{
-          message: 'hello chatbot',
-          sender: 'user',
-          id: 'id1'
-        }, {
-          message: 'Hello! How can I help you?',
-          sender: 'robot',
-          id: 'id2'
-        }, {
-          message: 'can you get me todays date?',
-          sender: 'user',
-          id: 'id3'
-        }, {
-          message: 'Today is October 30',
-          sender: 'robot',
-          id: 'id4'
-        }]);
+        const [chatMessages, setChatMessages] = React.useState([]);
 
         // const chatMessages = array[0];
         // const setChaMessages = array[1];
@@ -233,7 +228,8 @@
         return(
           <div className="chatbot-container chatbot-container-top">
             <ChatInput chatMessages={chatMessages} setChatMessages={setChatMessages} isLoading={isLoading} setIsLoading={setIsLoading} />
-            <ChatMessages chatMessages={chatMessages} />
+            {chatMessages.length === 0 && <p>Welcome to the chatbot project! Send a message using the text box.</p>}
+            <ChatMessages chatMessages={chatMessages} isLoading={isLoading} />
           </div>
         )
       }
